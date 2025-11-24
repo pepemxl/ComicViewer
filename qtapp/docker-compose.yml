@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  comic-viewer:
+    build: .
+    volumes:
+      - ./comics:/comics  # Monta tu carpeta de cómics
+      - /tmp/.X11-unix:/tmp/.X11-unix  # Permite mostrar GUI en Linux
+    environment:
+      - DISPLAY=${DISPLAY}  # Pasa la variable del host
+    devices:
+      - /dev/dri:/dev/dri  # Aceleración gráfica (opcional)
