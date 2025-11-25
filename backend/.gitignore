@@ -1,8 +1,4 @@
-TEMP/
-backend/comics
-backend/comics.db
 comics/*
-comics.db
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
