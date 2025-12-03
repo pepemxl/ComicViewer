@@ -20,7 +20,7 @@
 </script>
 
 <main class="p-6 max-w-7xl mx-auto">
-  <h1 class="text-4xl font-bold mb-8 text-center">Mi Biblioteca de Cómics/Mangas/Manhwas</h1>
+  <h1 class="text-4xl font-bold mb-8 text-center">Cómics/Mangas/Manhwas</h1>
 
   <!-- Upload -->
   <div class="mb-8 text-center">
@@ -31,18 +31,6 @@
       Subir nuevo .cbz
     </button>
   </div>
-
-  <div>
-    {comics}
-    <ul>
-    {#each comics as comic}
-        <li>
-            {comic.title} - {comic.id}
-        </li>
-        {/each}
-    </ul>
-  </div>
-
 
   <!-- Grid -->
   <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">

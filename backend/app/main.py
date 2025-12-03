@@ -94,25 +94,26 @@ def extract_volume(filename: str):
             return int(match.group(1))
     return 9999
 
-# def scan_comics_library():
-#     if not COMICS_ROOT.exists():
-#         return
-#     for cbz_path in COMICS_ROOT.rglob("*.cbz"):
-#         relative = cbz_path.relative_to(COMICS_ROOT).as_posix()
-#         existing = db.query(models.Comic).filter(models.Comic.filename == relative).first()
-#         if not existing:
-#             # Extraer serie del nombre de carpeta padre
-#             series = cbz_path.parent.name
-#             title = cbz_path.stem
-#             vol = extract_volume(title)
+def scan_comics_library():
+    if not COMICS_ROOT.exists():
+        return
+    for cbz_path in COMICS_ROOT.rglob("*.cbz"):
+        relative = cbz_path.relative_to(COMICS_ROOT).as_posix()
+        # existing = db.query(models.Comic).filter(models.Comic.filename == relative).first()
+        existing = False
+        if not existing:
+            # Extraer serie del nombre de carpeta padre
+            series = cbz_path.parent.name
+            title = cbz_path.stem
+            vol = extract_volume(title)
             
-#             comic = models.Comic(
-#                 filename=relative,
-#                 title=title,
-#                 series=series,
-#                 volume=vol,
-#                 pages=len(extract_pages_list(str(cbz_path)))
-#             )
+            comic = models.Comic(
+                filename=relative,
+                title=title,
+                series=series,
+                volume=vol,
+                pages=len(extract_pages_list(str(cbz_path)))
+            )
 #             db.add(comic)
 #     db.commit()
 
