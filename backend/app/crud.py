@@ -18,7 +18,11 @@ def create_comic(db: Session, file_content: bytes, filename: str):
     return comic
 
 def get_comics(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Comic).offset(skip).limit(limit).all()
+    #return db.query(models.Comic).offset(skip).limit(limit).all()
+    return db.query(models.Comic).order_by(
+            models.Comic.series.asc(), 
+            models.Comic.volume.asc()
+        ).offset(skip).limit(limit).all()
 
 def get_comic(db: Session, comic_id: int):
     return db.query(models.Comic).filter(models.Comic.id == comic_id).first()

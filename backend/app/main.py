@@ -15,18 +15,27 @@ from zipfile import BadZipFile
 from . import crud, models, schemas
 from .database import SessionLocal, engine, Base
 from .utils import extract_pages_list, get_page_image_with_raise, get_page_image
+from .crud import get_comic
 
 
 COMICS_ROOT = Path("../comics")   # cambiar en Docker a volumen
 Base.metadata.create_all(bind=engine)
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup events
-    print("Application starting up...")
+    # Startup: escanear al iniciar
+    db = SessionLocal()
+    try:
+        scan_comics_library(db)
+    finally:
+        db.close()
+    
+    # Shutdown: opcional, aquí puedes limpiar caché si quieres
     yield
-    # Shutdown events
-    print("Application shutting down...")
+    
+    # Cleanup si es necesario
+    pass
 
 #app = FastAPI(title="CBZ Reader")
 # app = FastAPI(docs_url=None, redoc_url=None, lifespan=lifespan)
@@ -94,39 +103,39 @@ def extract_volume(filename: str):
             return int(match.group(1))
     return 9999
 
-def scan_comics_library():
+def scan_comics_library(db: Session):
     if not COMICS_ROOT.exists():
+        print("⚠️  Carpeta /comics no existe - crea el volumen Docker")
         return
+    added = 0
     for cbz_path in COMICS_ROOT.rglob("*.cbz"):
         relative = cbz_path.relative_to(COMICS_ROOT).as_posix()
-        # existing = db.query(models.Comic).filter(models.Comic.filename == relative).first()
-        existing = False
+        existing = db.query(models.Comic).filter(models.Comic.filename == relative).first()
         if not existing:
             # Extraer serie del nombre de carpeta padre
-            series = cbz_path.parent.name
+            # series = cbz_path.parent.name
+            series = cbz_path.parent.name if cbz_path.parent.name != "comics" else "Sin serie"
             title = cbz_path.stem
             vol = extract_volume(title)
+            pages = len(extract_pages_list(str(cbz_path)))
             
             comic = models.Comic(
                 filename=relative,
                 title=title,
                 series=series,
                 volume=vol,
-                pages=len(extract_pages_list(str(cbz_path)))
+                pages=pages
             )
-#             db.add(comic)
-#     db.commit()
+            db.add(comic)
+            added += 1
+    if added > 0:
+        db.commit()
+        print(f"✅ Añadidos {added} cómics nuevos")
+    else:
+        print("ℹ️  No hay cómics nuevos")
 
 
-
-# @app.on_event("startup")
-# async def startup_event():
-#     # Escanear al iniciar
-#     scan_comics_library()
-
-
-
-# @app.post("/scan")
-# async def manual_scan(background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
-#     background_tasks.add_task(scan_comics_library)
-#     return {"status": "escaneando..."}
+@app.post("/scan")
+async def manual_scan(background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+    background_tasks.add_task(scan_comics_library)
+    return {"status": "escaneando en background..."}

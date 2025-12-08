@@ -12,3 +12,7 @@ alembic_create_migration:
 
 update_database_models:
 	python -c "from app.database import Base, engine; Base.metadata.create_all(bind=engine)"
+
+
+update_database_models2:
+	python -c "from app.database import Base, engine; Base.metadata.create_all(bind=engine); print('DB actualizada')"
