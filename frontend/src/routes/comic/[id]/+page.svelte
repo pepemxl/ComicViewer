@@ -92,9 +92,7 @@
   });
 </script>
 
-{#if browser}
-  <svelte:window on:keydown={handleKey} />
-{/if}
+<svelte:window on:keydown={handleKey} />
 
 <!-- El resto del HTML queda IGUAL, solo arreglamos 3 líneas con role + tabindex -->
 <div class="fixed inset-0 bg-black text-white flex flex-col" class:rtl={readingDirection === "rtl"}>
