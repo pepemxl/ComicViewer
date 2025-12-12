@@ -1,0 +1,10 @@
+node_modules
+.git
+comics/
+cache/
+.env
+*.db
+build/
+dist/
+TEMP/
+backend2/

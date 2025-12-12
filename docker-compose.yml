@@ -1,10 +1,38 @@
 version: "3.9"
 services:
   backend:
-    build: ./backend
+    build: 
+      context: ./
+      dockerfile: ./backend/Dockerfile.backend
     ports:
       - "8000:8000"
     volumes:
-      - ./backend/comics:/app/comics
+      - ./comics:/comics
+      - ./cache:/app/cache
+      - ./backend/comics.db:/app/comics.db
+    #depends_on:
+    #  - redis
     environment:
       - PYTHONUNBUFFERED=1
+#   frontend:
+#     build:
+#       context: ./
+#       dockerfile: ./frontend/Dockerfile.frontend
+#     ports:
+#       - "5173:5173"
+#       - "5174:80"
+#     environment:
+#       - ORIGIN=http://localhost:5173
+#       - VITE_API_URL=http://localhost:8000
+#     depends_on:
+#       - backend
+
+#   redis:
+#     image: redis:7-alpine
+#     ports:
+#       - "6379:6379"
+#     volumes:
+#       - redis_data:/data
+
+# volumes:
+#   redis_data:
