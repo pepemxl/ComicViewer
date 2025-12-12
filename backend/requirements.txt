@@ -4,4 +4,7 @@ uvicorn[standard]==0.30.6
 sqlalchemy==2.0.35
 python-multipart==0.0.9
 python-magic==0.4.27
+passlib[bcrypt]
 Pillow==10.4.0
+python-dotenv
+python-jose[cryptography]

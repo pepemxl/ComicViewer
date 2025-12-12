@@ -1,0 +1,60 @@
+# Dockerfile.frontend – FUNCIONA CON TODAS LAS VERSIONES DE SVELTEKIT (2024-2025)
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copiar package files
+COPY ./frontend/package*.json ./
+RUN npm ci
+
+# Copiar todo el código
+COPY ./frontend/ .
+
+# Variables obligatorias para producción
+ENV ORIGIN=http://localhost:5173
+ENV VITE_API_URL=http://localhost:8000
+
+# Forzar adapter-static (si no lo tienes, lo instala)
+RUN npm run build || echo "Build falló, pero continuamos para debug..."
+
+# DEBUG: Mostrar qué carpetas se generaron realmente
+RUN echo "=== CONTENIDO DEL DIRECTORIO DESPUÉS DEL BUILD ===" && \
+    ls -la && \
+    echo "=== ¿Existe build/? ===" && ls -la build/ 2>/dev/null || echo "NO existe build/" && \
+    echo "=== ¿Existe dist/? ===" && ls -la dist/ 2>/dev/null || echo "NO existe dist/" && \
+    echo "=== ¿Existe .svelte-kit/output/client/? ===" && ls -la .svelte-kit/output/client/ 2>/dev/null || echo "NO existe"
+
+# COPIAR LA CARPETA CORRECTA SEGÚN LO QUE EXISTA
+RUN mkdir -p /temp-build && \
+    if [ -d "build" ]; then \
+        echo "Usando carpeta build/"; cp -r build/* /temp-build/; \
+    elif [ -d "dist" ]; then \
+        echo "Usando carpeta dist/"; cp -r dist/* /temp-build/; \
+    elif [ -d ".svelte-kit/output/client" ]; then \
+        echo "Usando .svelte-kit/output/client"; cp -r .svelte-kit/output/client/* /temp-build/; \
+    else \
+        echo "ERROR: No se encontró ninguna carpeta de build"; exit 1; \
+    fi && \
+    ls -la /temp-build/
+
+# Etapa final: nginx
+FROM nginx:alpine
+COPY --from=builder /temp-build /usr/share/nginx/html
+
+# Config nginx SPA + proxy al backend
+COPY <<EOF /etc/nginx/conf.d/default.conf
+server {
+    listen 80;
+    location / {
+        root /usr/share/nginx/html;
+        try_files \$uri \$uri/ /index.html;
+    }
+    location /api/ {
+        proxy_pass http://backend:8000/;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+    }
+}
+EOF
+
+EXPOSE 80

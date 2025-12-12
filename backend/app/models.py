@@ -1,6 +1,8 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy.orm import relationship
 from .database import Base
 from datetime import datetime
+
 
 class Comic(Base):
     __tablename__ = "comics"
@@ -35,3 +37,24 @@ class Manhwa(Base):
     pages = Column(Integer)
     cover_path = Column(String)  # ruta temporal o bytes guardados
     uploaded_at = Column(DateTime, default=datetime.utcnow)
+
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+
+    # Relación con progreso
+    progress = relationship("ReadingProgress", back_populates="user", cascade="all, delete-orphan")
+
+class ReadingProgress(Base):
+    __tablename__ = "reading_progress"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    comic_id = Column(Integer, ForeignKey("comics.id"))
+    current_page = Column(Integer, default=0)
+    reading_mode = Column(String, default="double")
+    reading_direction = Column(String, default="ltr")
+
+    user = relationship("User", back_populates="progress")
+    comic = relationship("Comic")
