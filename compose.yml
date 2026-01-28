@@ -1,0 +1,15 @@
+services:
+  backend:
+    build: 
+      context: ./
+      dockerfile: ./backend/Dockerfile.backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./comics:/comics
+      - ./cache:/app/cache
+      - ./backend/comics.db:/app/comics.db
+    #depends_on:
+    #  - redis
+    environment:
+      - PYTHONUNBUFFERED=1
