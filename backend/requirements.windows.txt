@@ -1,0 +1,12 @@
+alembic
+fastapi==0.115.0
+uvicorn==0.30.6
+watchfiles
+sqlalchemy==2.0.35
+pydantic[email]
+python-multipart==0.0.9
+python-magic-bin
+passlib[bcrypt]
+Pillow==10.4.0
+python-dotenv
+python-jose[cryptography]
