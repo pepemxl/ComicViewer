@@ -1,7 +1,9 @@
 # Requisitos del Proyecto
 
-## Objetivo General
-Crear una aplicación web para gestionar series de cómics.
+## Objetivos Generales
+- Crear una aplicación web para gestionar series de cómics.
+- Crear una aplicación Android para gestionar series de cómics.
+- Crear una aplicación iOS para gestionar series de cómics.
 
 ## Objetivo Específico
 - Permitir al usuario gestionar sus series de cómics.
