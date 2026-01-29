@@ -16,6 +16,8 @@
 
 ### Completadas
 - [x] Análisis inicial (01/01/2026 - Detalles: Revisado arquitectura)
+- [x] Configurar proyecto base (28/01/2026 - Detalles: Crear repositorio Git)
+
 
 ## Instrucciones para Agentes
 Al completar una tarea:

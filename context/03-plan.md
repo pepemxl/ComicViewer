@@ -131,7 +131,7 @@ poetry add fastapi uvicorn python-multipart python-rarfile unrar sqlite sqlalche
 
 ## Timeline Estimado
 - Inicio: 21/01/2026
-- Entrega MVP: 28/01/2026
+- Entrega MVP: 11/02/2026
 
 ## Riesgos
 - Dependencias de base de datos.
