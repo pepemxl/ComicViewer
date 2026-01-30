@@ -23,7 +23,18 @@
 - Usa black para formateo.
 - Siempre añade tests.
 
+
+
 ## Límites
-- Nunca modifiques archivos fuera de /src/
+- Nunca modifiques archivos fuera de los siguientes directorios:
+    - backend/
+    - frontend/
+    - android_app/
+    - ios_app/
+    - context/
+    - AGENTS.md
+    - README.md
+    - .gitignore
+    - .vscode/
 - Pregunta antes de cambios mayores.
 - Al finalizar tarea, actualiza context/04-tasks.md

@@ -22,7 +22,7 @@
 - Crear, editar y eliminar lecturas.
 
 ## Requisitos No Funcionales
-- Tecnologías: Python (FastAPI), Svelte, SQLite, MySQL.
+- Tecnologías: Python (FastAPI), Svelte, Kotlin, Swift, SQLite, MySQL.
 - Debe ser responsive y seguro (JWT).
 - Tests unitarios > 80% cobertura.
 
