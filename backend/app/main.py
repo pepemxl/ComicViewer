@@ -140,9 +140,16 @@ def scan_comics_library(db: Session):
         print("ℹ️  No hay cómics nuevos")
 
 
+def run_scan_with_new_db():
+    db = SessionLocal()
+    try:
+        scan_comics_library(db)
+    finally:
+        db.close()
+
 @app.post("/scan")
-async def manual_scan(background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
-    background_tasks.add_task(scan_comics_library)
+async def manual_scan(background_tasks: BackgroundTasks):
+    background_tasks.add_task(run_scan_with_new_db)
     return {"status": "escaneando en background..."}
 
 
